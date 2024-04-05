@@ -24,7 +24,7 @@ class Poets_Posts_Metaboxes {
 	 *
 	 * @since 0.1
 	 * @access public
-	 * @var object $cpt The name of the Custom Post Type.
+	 * @var string
 	 */
 	public $post_type_name = 'post';
 
@@ -33,7 +33,7 @@ class Poets_Posts_Metaboxes {
 	 *
 	 * @since 0.1
 	 * @access public
-	 * @var str The Original database ID meta key.
+	 * @var string
 	 */
 	public $original_id_meta_key = 'poets_poems_original_id';
 
@@ -42,7 +42,7 @@ class Poets_Posts_Metaboxes {
 	 *
 	 * @since 0.1
 	 * @access public
-	 * @var str The Original author name meta key.
+	 * @var string
 	 */
 	public $author_name_meta_key = 'poets_poems_author_name';
 
@@ -53,10 +53,13 @@ class Poets_Posts_Metaboxes {
 	 */
 	public function __construct() {
 
+		// Register hook callbacks.
+		$this->register_hooks();
+
 	}
 
 	/**
-	 * Register WordPress hooks.
+	 * Register hook callbacks.
 	 *
 	 * @since 0.1
 	 */
@@ -65,12 +68,9 @@ class Poets_Posts_Metaboxes {
 		// Add meta boxes.
 		add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ] );
 
-		// Intercept save.
-		add_action( 'save_post', [ $this, 'save_post' ], 1, 2 );
-
 	}
 
-	// -------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------
 
 	/**
 	 * Adds meta boxes to admin screens
@@ -100,36 +100,17 @@ class Poets_Posts_Metaboxes {
 	public function metabox_legacy( $post ) {
 
 		// Get value for original ID key.
-		$val = $this->get_meta( $post, '_' . $this->original_id_meta_key );
+		$db_id = $this->get_meta( $post, '_' . $this->original_id_meta_key );
 
-		// Show original ID.
-		/* translators: %d: The original database ID. */
-		echo '<p>' . sprintf( __( 'Original database ID: %d', 'poets-posts' ), absint( $val ) ) . '</p>';
+		// Get value for original author key.
+		$author_name = $this->get_meta( $post, '_' . $this->author_name_meta_key );
 
-		// Get value for original ID key.
-		$val = $this->get_meta( $post, '_' . $this->author_name_meta_key );
-
-		// Show original ID.
-		/* translators: %s: The original author name. */
-		echo '<p>' . sprintf( __( 'Original author name: %s', 'poets-posts' ), esc_html( $val ) ) . '</p>';
+		// Use template.
+		include POETS_POSTS_PATH . 'assets/templates/metabox-posts.php';
 
 	}
 
-	/**
-	 * Stores our additional params.
-	 *
-	 * @since 0.1
-	 *
-	 * @param integer $post_id The ID of the post or revision.
-	 * @param integer $post The post object.
-	 */
-	public function save_post( $post_id, $post ) {
-
-		// We don't use post_id because we're not interested in revisions.
-
-	}
-
-	// -------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------
 
 	/**
 	 * Utility to simplify metadata retrieval.
@@ -137,7 +118,7 @@ class Poets_Posts_Metaboxes {
 	 * @since 0.1
 	 *
 	 * @param WP_Post $post The WordPress post object.
-	 * @param string $key The meta key.
+	 * @param string  $key The meta key.
 	 * @return mixed $data The data that was saved.
 	 */
 	private function get_meta( $post, $key ) {
@@ -148,7 +129,7 @@ class Poets_Posts_Metaboxes {
 		// Get value if the custom field already has one.
 		$existing = get_post_meta( $post->ID, $key, true );
 		if ( false !== $existing ) {
-			$data = get_post_meta( $post->ID, $key, true );
+			$data = $existing;
 		}
 
 		// --<
@@ -162,8 +143,8 @@ class Poets_Posts_Metaboxes {
 	 * @since 0.1
 	 *
 	 * @param WP_Post $post The WordPress post object.
-	 * @param string $key The meta key.
-	 * @param mixed $data The data to be saved.
+	 * @param string  $key The meta key.
+	 * @param mixed   $data The data to be saved.
 	 * @return mixed $data The data that was saved.
 	 */
 	private function save_meta( $post, $key, $data = '' ) {

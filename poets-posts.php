@@ -1,11 +1,13 @@
 <?php
 /**
+ * Football Poets Posts
+ *
  * Plugin Name: Football Poets Posts
- * Plugin URI: http://footballpoets.org
  * Description: Creates Metaboxes for Posts on the Football Poets site.
- * Author: Christian Wach
- * Version: 0.1
- * Author URI: https://haystack.co.uk
+ * Plugin URI:  https://github.com/football-poets/poets-posts
+ * Version:     0.1
+ * Author:      Christian Wach
+ * Author URI:  https://haystack.co.uk
  * Text Domain: poets-posts
  * Domain Path: /languages
  *
@@ -47,7 +49,7 @@ class Poets_Posts {
 	 *
 	 * @since 0.1
 	 * @access public
-	 * @var object $metaboxes The Metaboxes object.
+	 * @var Poets_Posts_Metaboxes
 	 */
 	public $metaboxes;
 
@@ -58,13 +60,9 @@ class Poets_Posts {
 	 */
 	public function __construct() {
 
-		// Include files.
+		// Bootstrap plugin.
 		$this->include_files();
-
-		// Setup globals.
 		$this->setup_globals();
-
-		// Register hooks.
 		$this->register_hooks();
 
 	}
@@ -103,9 +101,6 @@ class Poets_Posts {
 		// Use translation.
 		add_action( 'plugins_loaded', [ $this, 'translation' ] );
 
-		// Hooks that always need to be present.
-		$this->metaboxes->register_hooks();
-
 	}
 
 	/**
@@ -125,24 +120,6 @@ class Poets_Posts {
 
 	}
 
-	/**
-	 * Perform plugin activation tasks.
-	 *
-	 * @since 0.1
-	 */
-	public function activate() {
-
-	}
-
-	/**
-	 * Perform plugin deactivation tasks.
-	 *
-	 * @since 0.1
-	 */
-	public function deactivate() {
-
-	}
-
 }
 
 /**
@@ -150,7 +127,7 @@ class Poets_Posts {
  *
  * @since 0.1
  *
- * @return obj $poets_posts The plugin object.
+ * @return Poets_Posts $poets_posts The plugin object.
  */
 function poets_posts() {
 	static $poets_posts;
@@ -162,9 +139,3 @@ function poets_posts() {
 
 // Bootstrap plugin.
 poets_posts();
-
-// Activation.
-register_activation_hook( __FILE__, [ poets_posts(), 'activate' ] );
-
-// Deactivation.
-register_deactivation_hook( __FILE__, [ poets_posts(), 'deactivate' ] );
