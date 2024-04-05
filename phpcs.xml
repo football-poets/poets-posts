@@ -32,13 +32,13 @@
 		</properties>
 	</rule>
 
-	<!-- Allow short array syntax -->
+	<!-- Allow short array syntax. -->
 	<rule ref="Generic.Arrays.DisallowShortArraySyntax.Found">
 		<severity>0</severity>
 	</rule>
 	<rule ref="Generic.Arrays.DisallowLongArraySyntax.Found" />
 
-	<!-- Nesting levels -->
+	<!-- Nesting levels. -->
 	<rule ref="Generic.Metrics.NestingLevel">
 		<properties>
 			<property name="absoluteNestingLevel" value="4" />
