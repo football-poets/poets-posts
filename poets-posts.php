@@ -60,10 +60,38 @@ class Poets_Posts {
 	 */
 	public function __construct() {
 
+		// Initialise when all plugins are loaded.
+		add_action( 'plugins_loaded', [ $this, 'initialise' ] );
+
+	}
+
+	/**
+	 * Initialises this plugin.
+	 *
+	 * @since 0.2.0
+	 */
+	public function initialise() {
+
+		// Only do this once.
+		static $done;
+		if ( isset( $done ) && true === $done ) {
+			return;
+		}
+
 		// Bootstrap plugin.
 		$this->include_files();
 		$this->setup_globals();
 		$this->register_hooks();
+
+		/**
+		 * Broadcast that this plugin is now loaded.
+		 *
+		 * @since 0.2.0
+		 */
+		do_action( 'poets_posts/loaded' );
+
+		// We're done.
+		$done = true;
 
 	}
 
@@ -72,10 +100,10 @@ class Poets_Posts {
 	 *
 	 * @since 0.1
 	 */
-	public function include_files() {
+	private function include_files() {
 
 		// Include Metaboxes class.
-		include_once POETS_POSTS_PATH . 'includes/poets-posts-metaboxes.php';
+		include POETS_POSTS_PATH . 'includes/poets-posts-metaboxes.php';
 
 	}
 
@@ -84,7 +112,7 @@ class Poets_Posts {
 	 *
 	 * @since 0.1
 	 */
-	public function setup_globals() {
+	private function setup_globals() {
 
 		// Init Metaboxes object.
 		$this->metaboxes = new Poets_Posts_Metaboxes();
@@ -96,10 +124,10 @@ class Poets_Posts {
 	 *
 	 * @since 0.1
 	 */
-	public function register_hooks() {
+	private function register_hooks() {
 
 		// Use translation.
-		add_action( 'plugins_loaded', [ $this, 'translation' ] );
+		add_action( 'init', [ $this, 'translation' ] );
 
 	}
 
@@ -127,14 +155,21 @@ class Poets_Posts {
  *
  * @since 0.1
  *
- * @return Poets_Posts $poets_posts The plugin object.
+ * @return Poets_Posts $plugin The plugin object.
  */
 function poets_posts() {
-	static $poets_posts;
-	if ( ! isset( $poets_posts ) ) {
-		$poets_posts = new Poets_Posts();
+
+	// Store instance in static variable.
+	static $plugin = false;
+
+	// Maybe return instance.
+	if ( false === $plugin ) {
+		$plugin = new Poets_Posts();
 	}
-	return $poets_posts;
+
+	// --<
+	return $plugin;
+
 }
 
 // Bootstrap plugin.

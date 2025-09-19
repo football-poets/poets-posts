@@ -53,8 +53,36 @@ class Poets_Posts_Metaboxes {
 	 */
 	public function __construct() {
 
-		// Register hook callbacks.
+		// Init when this plugin is loaded.
+		add_action( 'poets_posts/loaded', [ $this, 'initialise' ] );
+
+	}
+
+	/**
+	 * Initialises this class.
+	 *
+	 * @since 0.2.0
+	 */
+	public function initialise() {
+
+		// Only do this once.
+		static $done;
+		if ( isset( $done ) && true === $done ) {
+			return;
+		}
+
+		// Bootstrap class.
 		$this->register_hooks();
+
+		/**
+		 * Broadcast that this class is now loaded.
+		 *
+		 * @since 0.2.0
+		 */
+		do_action( 'poets_posts/metaboxes/loaded' );
+
+		// We're done.
+		$done = true;
 
 	}
 
@@ -63,7 +91,7 @@ class Poets_Posts_Metaboxes {
 	 *
 	 * @since 0.1
 	 */
-	public function register_hooks() {
+	private function register_hooks() {
 
 		// Add meta boxes.
 		add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ] );
