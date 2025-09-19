@@ -5,7 +5,7 @@
  * Plugin Name: Football Poets Posts
  * Description: Creates Metaboxes for Posts on the Football Poets site.
  * Plugin URI:  https://github.com/football-poets/poets-posts
- * Version:     0.2.0a
+ * Version:     0.2.0
  * Author:      Christian Wach
  * Author URI:  https://haystack.co.uk
  * Text Domain: poets-posts
@@ -18,7 +18,7 @@
 defined( 'ABSPATH' ) || exit;
 
 // Set our version here.
-define( 'POETS_POSTS_VERSION', '0.2.0a' );
+define( 'POETS_POSTS_VERSION', '0.2.0' );
 
 // Store reference to this file.
 if ( ! defined( 'POETS_POSTS_FILE' ) ) {
